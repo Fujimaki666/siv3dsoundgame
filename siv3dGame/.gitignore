@@ -1,0 +1,39 @@
+# VS build cache
+/.vs/
+**/Debug/
+**/Release/
+*.VC.db
+*.VC.opendb
+
+# Siv3D Engine cache
+App/engine/
+
+# Intermediate build files
+**/Intermediate/
+*.obj
+*.pch
+*.pdb
+*.ipch
+*.idb
+*.exp
+*.lib
+*.log
+
+# Build artifacts
+*.exe
+*.dll
+*.manifest
+
+# Temp / backup
+*.tmp
+*.bak
+*.cache
+*.suo
+*.user
+*.userosscache
+*.tlog
+*.lastbuildstate
+
+# Windows junk
+Thumbs.db
+Desktop.ini
