@@ -1,17 +1,16 @@
 ﻿#pragma once
 #include <Siv3D.hpp>
-#include "StageBase.h"
 #include "Player.h"
 #include "Block.h"
 #include "Item.h"
 #include "Camera.h"
 #include "KeySound.h"
-#include "MikeAudio.h"
+//#include "MikeAudio.h"
 #include "DoorAnimation.h"
 #include "StageDifficulty.h"
 #include "UIManager.h"
 #include "Enemy.h"
-
+#include "Common.h"
 
 //ステージのベースになる
 class StageBase : public App::Scene
@@ -71,7 +70,7 @@ protected:
 	Array<Item> m_items;
 
 	KeySound m_keySound;
-	MikeAudio mike;
+	//MikeAudio mike;
 	Camera m_camera{ 4000, 720 };
 
 	// ゴール関係
@@ -125,4 +124,6 @@ protected:
 	Font font{ 18 };
 
 	Texture m_texCount;
+
+	bool m_sing = false;
 };

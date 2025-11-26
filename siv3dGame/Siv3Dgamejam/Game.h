@@ -34,7 +34,7 @@ private:
 
 	// マイク音声の起動フラグ
 	bool micStarted = false;
-	MikeAudio mike;
+	//MikeAudio mike;
 
 	double changeTimer = 0.0;
 	double flowerTimer = 0.0;// 花エフェクト発生タイマー

@@ -38,22 +38,46 @@ public:
 	{
 		for (auto&& [pair, collision] : world.getCollisions())
 		{
-			// プレイヤーが関係しない衝突ならスキップ
 			if (pair.a != m_body.id() && pair.b != m_body.id())
 				continue;
 
-			//衝突した相手の ID
 			P2BodyID otherID = (pair.a == m_body.id()) ? pair.b : pair.a;
 
-			// 衝突相手が地面ブロックか確認
+			// 相手がブロックかどうかチェック
+			bool isBlock = false;
 			for (const auto& block : blocks)
 			{
 				if (otherID == block.id())
+				{
+					isBlock = true;
+					break;
+				}
+			}
+			if (!isBlock)
+				continue;
+
+			// 衝突法線ベクトルを取得
+			const Vec2 n = collision.normal();  
+
+			// プレイヤーが A 側
+			if (pair.a == m_body.id()&& n.y > 0.5)
+			{
+				// 下向き（y > 0.5）に押されている,足元にブロック
+					return true;
+			}
+			// プレイヤーが B 側
+			else if( pair.b == m_body.id()&& n.y < -0.5)
+			{
+				// 上向き（y < -0.5）に押されている,足元にブロック
+				
 					return true;
 			}
 		}
+
 		return false;
 	}
+
+
 
 	void update(P2World& world, const Array<Block>& blocks, bool recording)
 	{
@@ -62,36 +86,39 @@ public:
 
 		m_isMoving = false;
 
-		// プレイヤーの移動
+		const double moveForce = 800.0;
+		const double maxSpeed = 180.0;
+
+		// 右移動
 		if (KeyRight.pressed())
 		{
-			vel.x = 180;
+			if (vel.x < maxSpeed)
+				m_body.applyForce({ moveForce, 0 });
+
 			m_isMoving = true;
 			m_facingRight = true;
 		}
+		// 左移動
 		else if (KeyLeft.pressed())
 		{
-			vel.x = -180;
+			if (vel.x > -maxSpeed)
+				m_body.applyForce({ -moveForce, 0 });
+
 			m_isMoving = true;
 			m_facingRight = false;
 		}
-		else vel.x = 0;
 
-
-		
-
-		// 最高速度の制限
-		vel.x = Clamp(vel.x, -240.0, 240.0);
-
-		// 最終反映
-		m_body.setVelocity(Vec2{ vel.x, m_body.getVelocity().y });
+		// 摩擦で徐々に止める（キーを離したときだけ）
+		if (!KeyRight.pressed() && !KeyLeft.pressed())
+		{
+			m_body.applyForce({ -vel.x * 8.0, 0 });
+		}
 
 		// ジャンプ
 		if (KeySpace.down() && grounded)
 		{
-			m_body.applyLinearImpulse({ 0, -180 });
+			m_body.applyLinearImpulse({ 0, -200 });
 		}
-
 		// 録音中
 		if (recording)
 		{
@@ -102,12 +129,12 @@ public:
 		{
 			double t = Scene::Time();
 			m_frameIndex = static_cast<int>(t / 0.15) % 2;
-			m_body.setVelocity({ vel.x, m_body.getVelocity().y });
+			//m_body.setVelocity({ vel.x, m_body.getVelocity().y });
 		}
 		else// 立ち状態
 		{
 			m_frameIndex = 0;
-			m_body.setVelocity({ vel.x, m_body.getVelocity().y });
+			//m_body.setVelocity({ vel.x, m_body.getVelocity().y });
 		}
 	}
 
@@ -128,14 +155,14 @@ public:
 	P2BodyID bodyID() const { return m_body.id(); }
 
 private:
-	P2Body m_body;
+	P2Body m_body;// 物理エンジン上の本体
 	
 
 	Array<Texture> m_textures;
 
-	int32 m_frameIndex = 0;
-	bool m_isMoving = false;
-	bool m_facingRight = true;
+	int32 m_frameIndex = 0; // どのテクスチャを使うか
+	bool m_isMoving = false;// 歩いているか
+	bool m_facingRight = true;// 右向きか
 
 	
 

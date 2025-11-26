@@ -25,7 +25,7 @@ void Game::update()
 	
 	world.update();
 	
-	m_player.update(world, m_blocks, mike.isRecording());
+	m_player.update(world, m_blocks, micStarted);
 	m_item.update();
 
 	m_camera.follow(m_player.getPos());
@@ -41,7 +41,7 @@ void Game::update()
 	if (m_player.getPos().x >= 960 && !micStarted)
 	{
 		//m_player.setPos(Vec2{ 1000, m_player.getPos().y });
-		mike.start();
+		//mike.start();
 		micStarted = true;
 		changeTimer = 0.0;
 	}

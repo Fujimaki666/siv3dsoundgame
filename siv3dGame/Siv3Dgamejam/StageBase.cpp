@@ -51,7 +51,7 @@ void StageBase::initStage()
 	
 
 	// マイク開始
-	mike.start();
+	//mike.start();
 	// プレイヤーとゴール位置
 	m_player = Player(world, playerStartPos());
 	m_goalPos = goalPos();
@@ -144,7 +144,7 @@ void StageBase::update()
 
 	
 	//  プレイヤーが歌っている判定
-	bool singing = (mike.getVolume() > 0.007);
+	//bool singing = (mike.getVolume() > 0.007);
 
 	// アイテム取得
 	m_items.remove_if([&](const Item& item)
@@ -158,10 +158,10 @@ void StageBase::update()
 	});
 
 	// 音に反応して花が咲く
-	if (singing) bloomFlower();
+	//if (singing) bloomFlower();
 
 	world.update();
-	m_player.update(world, m_blocks, !mike.isRecording());
+	m_player.update(world, m_blocks, m_sing);
 	
 	m_camera.follow(m_player.getPos());
 
